@@ -1,0 +1,4 @@
+passive walk the web (like a slide show)
+runs stumbleupon, wikipedia randomArticle, deliciios follow bookmarks, a specified trail or a random walk starting from any page
+implemented with selenium so no interupption of normal interaction (doesn't grab focus)
+netbeans IDE
