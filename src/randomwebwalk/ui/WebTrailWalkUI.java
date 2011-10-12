@@ -62,6 +62,8 @@ public class WebTrailWalkUI extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         List<String> trailText = null;
         
+        // todo disable next and prev buttons
+        
         if (theController != null){
             trailText = theController.getTrailText();
         }

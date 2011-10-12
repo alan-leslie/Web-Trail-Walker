@@ -81,33 +81,12 @@ public class RandomWebWalkRunner {
             Logger newLogger) throws MalformedURLException {
         theType = newType;
 
-        switch (theType) {
-            case randomArticle:
-                defaultLinkText = "Random article";
-                initialURL = new URL("http://en.wikipedia.org/wiki/Main_Page");
-                shouldRandomize = false;
-                break;
-            case stumbleUpon:
-                defaultLinkText = "Stumble!";
-                initialURL = new URL("http://www.stumbleupon.com/login.php");
-                shouldRandomize = false;
-                break;
-            case trail:
-                defaultLinkText = "";
-                shouldRandomize = false;
-                break;
-            case delicious:
-                defaultLinkText = "";
-                shouldRandomize = false;
-                break;
-            case free:
-                defaultLinkText = "";
-                shouldRandomize = true;
-                break;
-        }
-
+        defaultLinkText = "";
+        shouldRandomize = false;
         theTrailFileName = trailFile;
         theLogger = newLogger;
+        
+        initTrail();
     }
 
     /**
@@ -137,21 +116,10 @@ public class RandomWebWalkRunner {
             String profileId) throws WebDriverException {
         theLogger.log(Level.INFO, "Start up");
         webBrowser = new Browser(profileId, theLogger);
-        boolean isStumbleUpon = (theType == WalkType.stumbleUpon);
+        boolean isStumbleUpon = false;
 
         try {
-            if (theType == WalkType.trail) {
-                initTrail();
-            }
             webBrowser.start(initialURL, isStumbleUpon, idString, passwordString);
-
-            if (theType == WalkType.delicious) {
-                Page webPage = webBrowser.getCurrentPage();
-                Hyperlink link = null;
-
-                link = webPage.getLinkFromText("Browse these bookmarks");
-                webBrowser.goForward(link);
-            }
             setStatus(WalkStatus.successfulStep);
         } catch (LoginException ex) {
             theLogger.log(Level.SEVERE, null, ex);
@@ -175,7 +143,7 @@ public class RandomWebWalkRunner {
      * @postcon - as per invariant/return value
      */
     public WalkType getType() {
-        return theType;
+        return WalkType.trail;
     }
 
     /**
@@ -257,41 +225,14 @@ public class RandomWebWalkRunner {
             Page webPage = webBrowser.getCurrentPage();
             Hyperlink link = null;
 
-            switch (theType) {
-                case stumbleUpon:
-                case randomArticle: {
-                    link = webPage.getLinkFromText(defaultLinkText);
-                    webBrowser.goForward(link);
+            if (trailIterator != null) {
+                if (trailIterator.hasNext()) {
+                    String theURL = trailIterator.next().toString();
+                    webBrowser.gotoURL(theURL);
+                } else {
+                    // todo - need to stop at end 
+                    setStatus(WalkStatus.complete);
                 }
-                break;
-                case delicious: {
-                    link = webPage.getLinkFromId("nextLink");
-                    webBrowser.goForward(link);
-                }
-                break;
-                case trail: {
-                    if (trailIterator != null) {
-                        if (trailIterator.hasNext()) {
-                            String theURL = trailIterator.next().toString();
-                            webBrowser.gotoURL(theURL);
-                        } else {
-                            // todo - need to stop at end 
-                            setStatus(WalkStatus.complete);
-                        }
-                    }
-                }
-                break;
-                default: {
-                    if (shouldRandomize) {
-                        link = webPage.getRandomLink();
-                        if (webBrowser.hasAlreadyBeenVisited(link)) {
-                            link = webPage.getRandomLink();
-                        }
-                    }
-
-                    webBrowser.goForward(link);
-                }
-                break;
             }
 
             Page newPage = webBrowser.getCurrentPage();
@@ -348,22 +289,7 @@ public class RandomWebWalkRunner {
             webBrowser.refresh();
 
             Page newPage = webBrowser.getCurrentPage();
-
-            if (theType == WalkType.randomArticle
-                    || theType == WalkType.stumbleUpon) {
-                setStatus(WalkStatus.successfulStep);
-            } else {
-                if (!newPage.isInEnglish()) {
-                    setStatus(WalkStatus.pageNotEnglish);
-                } else {
-                    if (currentPageURL.equalsIgnoreCase(newPage.getURL())
-                            || newPage.isDeadEnd()) {
-                        setStatus(WalkStatus.pageDeadEnd);
-                    } else {
-                        setStatus(WalkStatus.successfulStep);
-                    }
-                }
-            }
+            setStatus(WalkStatus.successfulStep);
         } catch (WebDriverException theEx) {
             if (isExceptionTimeout(theEx)) {
                 theLogger.log(Level.WARNING,

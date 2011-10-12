@@ -19,5 +19,13 @@ public class JButtonWrapper implements PlayPauseDisplay {
 
     public void setToPlay() {
         theButton.setIcon(thePlayIcon);
+        
+        // todo disable the next and prev buttons
     }
+    
+    public void setToPause() {
+//        theButton.setIcon(thePlayIcon);
+        
+        // todo enable next and prev buttons
+}
 }

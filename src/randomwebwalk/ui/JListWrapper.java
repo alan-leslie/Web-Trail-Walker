@@ -19,5 +19,7 @@ public class JListWrapper implements ListItemSelector {
     public void selectItem(int itemNo){
         theList.setSelectedIndex(itemNo);
     }
+    
+    // todo need to find at start and at end and disable buttons accordingly
 }
 
