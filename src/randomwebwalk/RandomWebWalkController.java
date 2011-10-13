@@ -337,9 +337,7 @@ public class RandomWebWalkController implements Runnable {
     /**
      * 
      */
-    public void stepBack() {
-        // need to know whether it is at start so cannot step back
-        // if so disable the button
+    public int stepBack() {
         if (!isTaskStopped()) {
             pauseTask();
         }
@@ -353,12 +351,14 @@ public class RandomWebWalkController implements Runnable {
         } catch (ExecutionException ex) {
             theLogger.log(Level.SEVERE, null, ex);
         }
+        
+        return 0;
     }
 
     /**
      * 
      */
-    public void stepForward() {
+    public int stepForward() {
         if (!isTaskStopped()) {
             pauseTask();
         }
@@ -374,6 +374,8 @@ public class RandomWebWalkController implements Runnable {
                 theLogger.log(Level.SEVERE, null, ex);
             }
         }
+        
+        return 0;
     }
 
     /**
@@ -385,6 +387,18 @@ public class RandomWebWalkController implements Runnable {
         return retVal;
     }
 
+    /**
+     * 
+     * @return
+     */
+    public int getCurrentTrailPos() {
+        if (theRunner != null) {
+            return theRunner.getCurrentTrailPos();
+        }
+
+        return 0;
+    }
+        
     /**
      * 
      * @return

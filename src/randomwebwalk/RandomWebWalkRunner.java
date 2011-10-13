@@ -313,6 +313,7 @@ public class RandomWebWalkRunner {
         theLogger.log(Level.INFO, "GoBack");
         try {
             webBrowser.goBack();
+            String theURL = trailIterator.previous().toString();
             setStatus(WalkStatus.successfulStep);
         } catch (WebDriverException theEx) {
             if (isExceptionTimeout(theEx)) {
@@ -449,10 +450,20 @@ public class RandomWebWalkRunner {
             initialURL = trailIterator.next();
         }
     }
+    
+    
+    int getCurrentTrailPos() {
+        if (trailIterator != null) {
+            int thePos = trailIterator.nextIndex()-1;
+            return thePos;
+        }
+
+        return 0;
+    }
 
     boolean isAtEnd() {
         if (trailIterator != null) {
-            return trailIterator.hasNext();
+            return !trailIterator.hasNext();
         }
 
         return true;
@@ -460,7 +471,7 @@ public class RandomWebWalkRunner {
 
     boolean isAtStart() {
         if (trailIterator != null) {
-            return trailIterator.hasPrevious();
+            return !trailIterator.hasPrevious();
         }
 
         return true;

@@ -2,13 +2,13 @@
  */
 package randomwebwalk.ui;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.image.BufferedImage;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
-import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.*;
@@ -20,33 +20,27 @@ import randomwebwalk.RandomWebWalkController;
  * a status display text field
  * two buttons indicating whether the program is running pausec or stopped.
  */
-
 public class WebTrailWalkUI extends JFrame {
 
-    ImageIcon pauseIcon;
-    ImageIcon playIcon;
-    ImageIcon stopIcon;    
-    ImageIcon nextIcon;
-    ImageIcon previousIcon;
-    JLabel statusLabel;
-    JTextField startPageTextField;
-    JTextField idTextField;
-    JPasswordField passwordTextField;
-    JLabel startPageLabel;
-    JLabel idLabel;
-    JLabel passwordLabel;
-    JButton playPauseButton;
-    JButton stopButton;
-    JButton nextButton;
-    JButton previousButton;
-    JList trailList;
-    Thread taskThread = null;
-    PlayPauseListener thePlayPauseListener = null;
-    StopListener theStopListener = null;
-    String idString = null;
-    String passwordString = null;
-    URL initialURL = null;
-    RandomWebWalkController theController = null;
+    private ImageIcon pauseIcon;
+    private ImageIcon playIcon;
+    private ImageIcon stopIcon;
+    private ImageIcon nextIcon;
+    private ImageIcon previousIcon;
+    private JLabel statusLabel;
+    private JTextField startPageTextField;
+    private JButton playPauseButton;
+    private JButton stopButton;
+    private JButton nextButton;
+    private JButton previousButton;
+    private JList trailList;
+    private Thread taskThread = null;
+    private PlayPauseListener thePlayPauseListener = null;
+    private StopListener theStopListener = null;
+    private NextListener theNextListener = null;
+    private PreviousListener thePreviousListener = null;
+    private URL initialURL = null;
+    private RandomWebWalkController theController = null;
 
     // @param images - needs to be three images at least
     public WebTrailWalkUI(BufferedImage[] images) {
@@ -61,13 +55,13 @@ public class WebTrailWalkUI extends JFrame {
     public void start() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         List<String> trailText = null;
-        
+
         // todo disable next and prev buttons
-        
-        if (theController != null){
+
+        if (theController != null) {
             trailText = theController.getTrailText();
         }
-        
+
         setLayout(new GridLayout(3, 1));
 
         getContentPane().add(getListPanel(trailText));
@@ -89,11 +83,11 @@ public class WebTrailWalkUI extends JFrame {
 
                     try {
                         if (!initialURLStr.isEmpty()) {
-                            if(initialURLStr.contains("http://")){
+                            if (initialURLStr.contains("http://")) {
                                 initialURL = new URL(initialURLStr);
                             } else {
                                 String theFullURLStr = theController.getBaseURL() + initialURLStr;
-                                initialURL = new URL(theFullURLStr);                                
+                                initialURL = new URL(theFullURLStr);
                             }
                             isValidURL = true;
                         }
@@ -187,7 +181,12 @@ public class WebTrailWalkUI extends JFrame {
         stopButton.addActionListener(theStopListener);
 
         nextButton = new JButton(nextIcon);
+        theNextListener = new NextListener(this);
+        nextButton.addActionListener(theNextListener);
+
         previousButton = new JButton(previousIcon);
+        thePreviousListener = new PreviousListener(this);
+        previousButton.addActionListener(thePreviousListener);
 
         JPanel panel = new JPanel();
         panel.setLayout(new GridLayout(2, 2));
@@ -195,20 +194,29 @@ public class WebTrailWalkUI extends JFrame {
         panel.add(stopButton);
         panel.add(previousButton);
         panel.add(nextButton);
-        
+
         return panel;
     }
 
     private JPanel getListPanel(List<String> trailText) {
-        trailList = new JList(trailText.toArray());   
-        trailList.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+        DefaultListModel listModel = new DefaultListModel();
+
+        for (String trailItem : trailText) {
+            listModel.addElement(trailItem);
+        }
+
+        trailList = new JList(listModel);
+        trailList.setSelectedIndex(0);
+        trailList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         trailList.setLayoutOrientation(JList.VERTICAL);
         trailList.setVisibleRowCount(-1);
 
-        JPanel panel = new JPanel();
-        panel.add(trailList);
-        panel.setSize(200, 200);
+        JScrollPane listScrollPane = new JScrollPane(trailList);
+        JPanel panel = new JPanel(new BorderLayout());
+//        panel.add(trailList);
+//        panel.setSize(200, 200);
         panel.setBorder(BorderFactory.createLineBorder(Color.black));
+        panel.add(listScrollPane, BorderLayout.CENTER);
 
         return panel;
     }
@@ -218,12 +226,32 @@ public class WebTrailWalkUI extends JFrame {
     }
 
     // todo - disable buttons if at end or start
-    // or if stopped or running?
+    // or if stopped or running?    
+    private void setEnableButtons() {
+        if (theController.isAtStart()) {
+            previousButton.setEnabled(false);
+        } else {
+            previousButton.setEnabled(true);
+        }
+
+        if (theController.isAtEnd()) {
+            nextButton.setEnabled(false);
+        } else {
+            nextButton.setEnabled(true);
+        }
+    }
+
     void prev() {
         theController.stepBack();
+        int theTrailPos = theController.getCurrentTrailPos();
+        trailList.setSelectedIndex(theTrailPos);
+        setEnableButtons();
     }
 
     void next() {
         theController.stepForward();
+        int theTrailPos = theController.getCurrentTrailPos();
+        trailList.setSelectedIndex(theTrailPos);
+        setEnableButtons();
     }
 }
