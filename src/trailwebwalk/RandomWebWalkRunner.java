@@ -1,4 +1,4 @@
-package randomwebwalk;
+package trailwebwalk;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -13,9 +13,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.security.auth.login.LoginException;
 import org.openqa.selenium.WebDriverException;
-import randomwebwalk.browser.Browser;
-import randomwebwalk.browser.Hyperlink;
-import randomwebwalk.browser.Page;
+import trailwebwalk.browser.Browser;
+import trailwebwalk.browser.Hyperlink;
+import trailwebwalk.browser.Page;
 
 /**
  *

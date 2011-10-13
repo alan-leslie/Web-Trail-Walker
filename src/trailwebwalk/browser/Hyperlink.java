@@ -1,4 +1,4 @@
-package randomwebwalk.browser;
+package trailwebwalk.browser;
 
 import org.openqa.selenium.WebElement;
 

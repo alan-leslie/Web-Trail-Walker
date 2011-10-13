@@ -1,4 +1,4 @@
-package randomwebwalk;
+package trailwebwalk;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -7,8 +7,8 @@ import java.util.Properties;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import randomwebwalk.ui.PlayPauseDisplay;
-import randomwebwalk.ui.WalkStatusDisplay;
+import trailwebwalk.ui.PlayPauseDisplay;
+import trailwebwalk.ui.WalkStatusDisplay;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.openqa.selenium.WebDriverException;
@@ -136,21 +136,6 @@ public class RandomWebWalkController implements Runnable {
     }
 
     /**
-     * Sets the URL that the walker should initially connect to to the input.
-     * @param newInitialURL - a valid URL to connect to.
-     */
-    public void setInitialURL(URL newInitialURL) {
-        if (theType == RandomWebWalkRunner.WalkType.free) {
-            theRunner.setInitialURL(newInitialURL);
-        }
-
-        if (theType == RandomWebWalkRunner.WalkType.delicious) {
-
-            theRunner.setInitialURL(newInitialURL);
-        }
-    }
-
-    /**
      * Sets the pay/pause display to the specified param.
      * @param newPlayPauseDisplay 
      */
@@ -248,21 +233,6 @@ public class RandomWebWalkController implements Runnable {
 
     /**
      *
-     * @return whether the type of walk requires an explicitly set start URL
-     * @precon - as per invariant.
-     * @postcon -as per invariant/return spec.
-     */
-    public boolean needsStartPage() {
-        if (theRunner.getType() == RandomWebWalkRunner.WalkType.free
-                || theRunner.getType() == RandomWebWalkRunner.WalkType.delicious) {
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     *
      * @return the base url
      * @precon - as per invariant.
      * @postcon -as per invariant/return spec.
@@ -336,6 +306,7 @@ public class RandomWebWalkController implements Runnable {
 
     /**
      * 
+     * @return 
      */
     public int stepBack() {
         if (!isTaskStopped()) {
@@ -357,6 +328,7 @@ public class RandomWebWalkController implements Runnable {
 
     /**
      * 
+     * @return 
      */
     public int stepForward() {
         if (!isTaskStopped()) {

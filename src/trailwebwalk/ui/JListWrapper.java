@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package randomwebwalk.ui;
+package trailwebwalk.ui;
 
 import javax.swing.JList;
 

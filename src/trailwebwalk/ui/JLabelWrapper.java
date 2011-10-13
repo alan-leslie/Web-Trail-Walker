@@ -1,4 +1,4 @@
-package randomwebwalk.ui;
+package trailwebwalk.ui;
 
 import javax.swing.JLabel;
 

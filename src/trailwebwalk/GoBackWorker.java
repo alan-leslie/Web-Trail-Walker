@@ -1,4 +1,4 @@
-package randomwebwalk;
+package trailwebwalk;
 
 import java.util.concurrent.Callable;
 

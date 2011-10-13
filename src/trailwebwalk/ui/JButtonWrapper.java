@@ -1,5 +1,5 @@
 
-package randomwebwalk.ui;
+package trailwebwalk.ui;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;

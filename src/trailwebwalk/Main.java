@@ -3,9 +3,9 @@
  *
  */
 
-package randomwebwalk;
+package trailwebwalk;
 
-import randomwebwalk.ui.WebTrailWalkUI;
+import trailwebwalk.ui.WebTrailWalkUI;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.File;

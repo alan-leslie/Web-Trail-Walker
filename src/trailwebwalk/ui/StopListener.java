@@ -3,9 +3,9 @@
  * and open the template in the editor.
  */
 
-package randomwebwalk.ui;
+package trailwebwalk.ui;
 
-import randomwebwalk.ui.WebTrailWalkUI;
+import trailwebwalk.ui.WebTrailWalkUI;
 import java.awt.event.*;
 
 /**

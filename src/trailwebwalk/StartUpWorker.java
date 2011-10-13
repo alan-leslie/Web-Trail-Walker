@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 
-package randomwebwalk;
+package trailwebwalk;
 
 import java.util.concurrent.Callable;
 import com.thoughtworks.selenium.Selenium;

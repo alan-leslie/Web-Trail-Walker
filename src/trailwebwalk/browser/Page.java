@@ -1,4 +1,4 @@
-package randomwebwalk.browser;
+package trailwebwalk.browser;
 
 import java.util.List;
 import java.util.Random;

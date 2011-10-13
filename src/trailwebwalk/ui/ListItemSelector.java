@@ -1,5 +1,5 @@
 
-package randomwebwalk.ui;
+package trailwebwalk.ui;
 
 /**
  *

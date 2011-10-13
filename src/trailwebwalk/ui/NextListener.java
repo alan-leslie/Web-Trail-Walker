@@ -1,4 +1,4 @@
-package randomwebwalk.ui;
+package trailwebwalk.ui;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -7,14 +7,15 @@ import java.awt.event.ActionListener;
  *
  * @author al
  */
-public class PreviousListener implements ActionListener {
+public class NextListener implements ActionListener {
     private final WebTrailWalkUI theUI;
 
-    PreviousListener(WebTrailWalkUI theNewUI) {
+    NextListener(WebTrailWalkUI theNewUI) {
         theUI = theNewUI;
     }
 
     public void actionPerformed(ActionEvent e) {
-        theUI.prev();
+        theUI.next();
     }
 }
+
