@@ -7,9 +7,9 @@ import java.util.concurrent.Callable;
  * @author al
  */
 public class GoBackWorker implements Callable<Boolean> {
-    private final RandomWebWalkRunner theRunner;
+    private final WebWalkRunner theRunner;
 
-    public GoBackWorker(RandomWebWalkRunner theRunner) {
+    public GoBackWorker(WebWalkRunner theRunner) {
         this.theRunner = theRunner;
     }
 

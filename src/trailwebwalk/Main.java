@@ -54,7 +54,7 @@ public class Main {
 
         Logger theLogger = Main.makeLogger();
         WebTrailWalkUI theUI = new WebTrailWalkUI(images);
-        RandomWebWalkController theController = new RandomWebWalkController(properties, theLogger);
+        WebWalkController theController = new WebWalkController(properties, theLogger);
         theUI.setController(theController);
         theUI.start();
     }

@@ -7,6 +7,7 @@ import java.util.Properties;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import trailwebwalk.ui.ListItemSelector;
 import trailwebwalk.ui.PlayPauseDisplay;
 import trailwebwalk.ui.WalkStatusDisplay;
 import java.util.logging.Level;
@@ -23,18 +24,19 @@ import org.openqa.selenium.WebDriverException;
  * @invariant - the runner is valid.
  * @invariant - the Logger is a valid logger.
  */
-public class RandomWebWalkController implements Runnable {
+public class WebWalkController implements Runnable {
 
     private WalkStatusDisplay statusLabel = null; // status label passed from UI
     private PlayPauseDisplay playPauseDisplay = null; // play display passed from UI.
-    private final RandomWebWalkRunner theRunner;
+    private final WebWalkRunner theRunner;
     private volatile boolean taskStopped = false;
     private final int BETWEEN_PAGE_SLEEP_TIME; // time to wait between page refresh
-    private final RandomWebWalkRunner.WalkType theType;
+    private final WebWalkRunner.WalkType theType;
     private final Logger theLogger;
     private final String profileId; // the firefox profile identifier
     private String theBaseURL;  // the base URL 
     private final ExecutorService exec;
+    private ListItemSelector listItemSelector;
 
     /**
      *
@@ -44,15 +46,15 @@ public class RandomWebWalkController implements Runnable {
      * @precon - as per param spec.
      * @postcon - as per invariant.
      */
-    public RandomWebWalkController(Properties properties,
+    public WebWalkController(Properties properties,
             Logger newLogger) throws MalformedURLException {
         theLogger = newLogger;
         exec = Executors.newSingleThreadExecutor();
 
-        theType = RandomWebWalkRunner.WalkType.trail;
+        theType = WebWalkRunner.WalkType.trail;
 
         String trailFile = properties.getProperty("TrailFileName", "");
-        theRunner = new RandomWebWalkRunner(theType, trailFile, theLogger);
+        theRunner = new WebWalkRunner(trailFile, theLogger);
 
         String sleepTimeProperty = properties.getProperty("SleepTime");
 
@@ -80,9 +82,9 @@ public class RandomWebWalkController implements Runnable {
         try {
             start();
 
-            RandomWebWalkRunner.WalkStatus runnerStatus = theRunner.checkStatus();
+            WebWalkRunner.WalkStatus runnerStatus = theRunner.checkStatus();
 
-            if (runnerStatus != RandomWebWalkRunner.WalkStatus.successfulStep) {
+            if (runnerStatus != WebWalkRunner.WalkStatus.successfulStep) {
                 pauseTask();
                 statusLabel.setText("Walking failed");
                 return;
@@ -93,13 +95,13 @@ public class RandomWebWalkController implements Runnable {
             while (!isTaskStopped()) {
                 step();
 
-                RandomWebWalkRunner.WalkStatus stepRunnerStatus = theRunner.checkStatus();
+                WebWalkRunner.WalkStatus stepRunnerStatus = theRunner.checkStatus();
 
-                if (stepRunnerStatus == RandomWebWalkRunner.WalkStatus.failedStep) {
+                if (stepRunnerStatus == WebWalkRunner.WalkStatus.failedStep) {
                     pauseTask();
                     statusLabel.setText("Walking failed");
                 } else {
-                    if (stepRunnerStatus == RandomWebWalkRunner.WalkStatus.complete) {
+                    if (stepRunnerStatus == WebWalkRunner.WalkStatus.complete) {
                         pauseTask();
                         statusLabel.setText("Walking complete");
                     } else {
@@ -128,7 +130,7 @@ public class RandomWebWalkController implements Runnable {
     }
 
     /**
-     * Connects this controller to the input display.
+     * Connects this controller to the status display.
      * @param theStatusDisplay
      */
     public void setNotificationDisplay(WalkStatusDisplay theStatusDisplay) {
@@ -141,6 +143,14 @@ public class RandomWebWalkController implements Runnable {
      */
     public void setPlayPauseDisplay(PlayPauseDisplay newPlayPauseDisplay) {
         playPauseDisplay = newPlayPauseDisplay;
+    }
+    
+    /**
+     * Sets the listItemSelector display to the specified param.
+     * @param theListItemSelector 
+     */    
+    public void setListItemSelector(ListItemSelector theListItemSelector) {
+        listItemSelector = theListItemSelector; 
     }
 
     /**
@@ -168,14 +178,12 @@ public class RandomWebWalkController implements Runnable {
         }
 
         theRunner.step();
+        listItemSelector.selectItem(getCurrentTrailPos());
 
-        RandomWebWalkRunner.WalkStatus theStatus = theRunner.checkStatus();
+        WebWalkRunner.WalkStatus theStatus = theRunner.checkStatus();
 
-        if (theStatus != RandomWebWalkRunner.WalkStatus.successfulStep) {
+        if (theStatus != WebWalkRunner.WalkStatus.successfulStep) {
             switch (theStatus) {
-                case pageNotEnglish:
-                    recoverPageNotEnglish();
-                    break;
                 case permissionDenied:
                     recoverPageNotFound();
                     break;
@@ -185,9 +193,6 @@ public class RandomWebWalkController implements Runnable {
                 case pageTimedOut:
                     recoverPageTimeout();
                     break;
-                case pageDeadEnd:
-                    recoverPageDeadEnd();
-                    break;
             }
         }
     }
@@ -195,8 +200,8 @@ public class RandomWebWalkController implements Runnable {
     /**
      * Perform pause for the required time between page change.
      */
-    private void pauseBetweenPages(RandomWebWalkRunner.WalkStatus runnerStatus) throws InterruptedException {
-        if (runnerStatus == RandomWebWalkRunner.WalkStatus.successfulStep) {
+    private void pauseBetweenPages(WebWalkRunner.WalkStatus runnerStatus) throws InterruptedException {
+        if (runnerStatus == WebWalkRunner.WalkStatus.successfulStep) {
             int counter = 0;
             while (counter++ < (BETWEEN_PAGE_SLEEP_TIME * 10)
                     && !isTaskStopped()) {
@@ -270,23 +275,23 @@ public class RandomWebWalkController implements Runnable {
      */
     private void recoverPageTimeout() throws WebDriverException {
         theLogger.log(Level.INFO, "recoverPageTimeout");
-        RandomWebWalkRunner.WalkStatus runnerStatus = theRunner.checkStatus();
+        WebWalkRunner.WalkStatus runnerStatus = theRunner.checkStatus();
 
-        if (runnerStatus == RandomWebWalkRunner.WalkStatus.pageTimedOut) {
+        if (runnerStatus == WebWalkRunner.WalkStatus.pageTimedOut) {
             theLogger.log(Level.INFO, "trying refresh");
             theRunner.refresh();
             runnerStatus = theRunner.checkStatus();
         }
 
-        if (runnerStatus == RandomWebWalkRunner.WalkStatus.pageTimedOut) {
+        if (runnerStatus == WebWalkRunner.WalkStatus.pageTimedOut) {
             theLogger.log(Level.INFO, "trying go back");
             theRunner.goBack();
             runnerStatus = theRunner.checkStatus();
         }
 
-        if (runnerStatus == RandomWebWalkRunner.WalkStatus.pageTimedOut) {
+        if (runnerStatus == WebWalkRunner.WalkStatus.pageTimedOut) {
             theLogger.log(Level.INFO, "giving up");
-            theRunner.setStatus(RandomWebWalkRunner.WalkStatus.failedStep);
+            theRunner.setStatus(WebWalkRunner.WalkStatus.failedStep);
         }
     }
 
@@ -302,6 +307,7 @@ public class RandomWebWalkController implements Runnable {
      */
     private void goBack() throws WebDriverException {
         theRunner.goBack();
+        listItemSelector.selectItem(getCurrentTrailPos());
     }
 
     /**
@@ -316,7 +322,7 @@ public class RandomWebWalkController implements Runnable {
         GoBackWorker goBackWorker = new GoBackWorker(theRunner);
 
         try {
-            exec.submit(goBackWorker).get();
+            exec.submit(goBackWorker).get();          
         } catch (InterruptedException ex) {
             theLogger.log(Level.SEVERE, null, ex);
         } catch (ExecutionException ex) {
@@ -403,7 +409,7 @@ public class RandomWebWalkController implements Runnable {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final RandomWebWalkController other = (RandomWebWalkController) obj;
+        final WebWalkController other = (WebWalkController) obj;
 
         if (this.theType != other.theType) {
             return false;

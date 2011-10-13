@@ -30,37 +30,29 @@ import trailwebwalk.browser.Page;
  * incorrect states (see precons below for more details).
  * Normally expect to have only one object of this class in a program.
  */
-public class RandomWebWalkRunner {
+public class WebWalkRunner {
     // enum indication of the current status of the walk
 
     public enum WalkStatus {
 
         successfulStep,
-        pageNotEnglish,
         permissionDenied,
         pageTimedOut,
         pageNotFound,
-        pageDeadEnd,
-        loginFailure,
-        failedStep, complete
+        failedStep, 
+        complete
     };
 
     // type of walk - crucial to decision of where the walk starts, how a
     // random link is selected and decisions on walkStatus
     public enum WalkType {
-
-        stumbleUpon,
-        randomArticle,
-        delicious,
-        trail,
-        free
+        trail
     };
+    
     private Browser webBrowser = null;
     private final Logger theLogger;
     private WalkStatus walkStatus = WalkStatus.successfulStep;
     private int failureCount = 0;
-    private final WalkType theType;
-    private boolean shouldRandomize = false;    // how a random link should be picked
     private String defaultLinkText = "";     // the link that should be selected if applicable
     private URL initialURL = null; // starting URL
     private final String theTrailFileName; // name of file that includes trail to be followed
@@ -76,13 +68,10 @@ public class RandomWebWalkRunner {
      * @precon - as per invariant/param spec
      * @postcon - as per invariant
      */
-    public RandomWebWalkRunner(WalkType newType,
+    public WebWalkRunner(
             String trailFile,
             Logger newLogger) throws MalformedURLException {
-        theType = newType;
-
         defaultLinkText = "";
-        shouldRandomize = false;
         theTrailFileName = trailFile;
         theLogger = newLogger;
         
@@ -123,7 +112,7 @@ public class RandomWebWalkRunner {
             setStatus(WalkStatus.successfulStep);
         } catch (LoginException ex) {
             theLogger.log(Level.SEVERE, null, ex);
-            setStatus(WalkStatus.loginFailure);
+            setStatus(WalkStatus.failedStep);
         } catch (WebDriverException theEx) {
             if (isExceptionTimeout(theEx)) {
                 theLogger.log(Level.WARNING,
@@ -171,7 +160,7 @@ public class RandomWebWalkRunner {
      * @postcon - the status is set to successful
      */
     public void pause() {
-        setStatus(RandomWebWalkRunner.WalkStatus.successfulStep);
+        setStatus(WebWalkRunner.WalkStatus.successfulStep);
     }
 
     /**
@@ -230,7 +219,6 @@ public class RandomWebWalkRunner {
                     String theURL = trailIterator.next().toString();
                     webBrowser.gotoURL(theURL);
                 } else {
-                    // todo - need to stop at end 
                     setStatus(WalkStatus.complete);
                 }
             }
@@ -239,21 +227,8 @@ public class RandomWebWalkRunner {
             String newPageURL = newPage.getURL();
             theLogger.log(Level.INFO, "New page: {0}", newPageURL);
 
-            if (theType == WalkType.free) {
-                if (!newPage.isInEnglish()) {
-                    setStatus(WalkStatus.pageNotEnglish);
-                } else {
-                    if (currentPageURL.equalsIgnoreCase(newPage.getURL())
-                            || newPage.isDeadEnd()) {
-                        setStatus(WalkStatus.pageDeadEnd);
-                    } else {
-                        setStatus(WalkStatus.successfulStep);
-                    }
-                }
-            } else {
-                if (checkStatus() != WalkStatus.complete) {
-                    setStatus(WalkStatus.successfulStep);
-                }
+            if (checkStatus() != WalkStatus.complete) {
+                setStatus(WalkStatus.successfulStep);
             }
 
             theLogger.log(Level.INFO, "Status set");
@@ -347,7 +322,7 @@ public class RandomWebWalkRunner {
      * @precon - as per invariant
      * @postcon - as per invariant/return
      */
-    public RandomWebWalkRunner.WalkStatus checkStatus() {
+    public WebWalkRunner.WalkStatus checkStatus() {
         return walkStatus;
     }
 
@@ -496,13 +471,8 @@ public class RandomWebWalkRunner {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final RandomWebWalkRunner other = (RandomWebWalkRunner) obj;
-        if (this.theType != other.theType) {
-            return false;
-        }
-        if (this.shouldRandomize != other.shouldRandomize) {
-            return false;
-        }
+        final WebWalkRunner other = (WebWalkRunner) obj;
+        
         if ((this.defaultLinkText == null) ? (other.defaultLinkText != null) : !this.defaultLinkText.equals(other.defaultLinkText)) {
             return false;
         }
@@ -512,8 +482,6 @@ public class RandomWebWalkRunner {
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 29 * hash + (this.theType != null ? this.theType.hashCode() : 0);
-        hash = 29 * hash + (this.shouldRandomize ? 1 : 0);
         hash = 29 * hash + (this.defaultLinkText != null ? this.defaultLinkText.hashCode() : 0);
         return hash;
     }

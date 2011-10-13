@@ -7,9 +7,9 @@ import java.util.concurrent.Callable;
  * @author al
  */
 public class StepWorker implements Callable<Boolean> {
-    private final RandomWebWalkRunner theRunner;
+    private final WebWalkRunner theRunner;
 
-    public StepWorker(RandomWebWalkRunner theRunner) {
+    public StepWorker(WebWalkRunner theRunner) {
         this.theRunner = theRunner;
     }
 

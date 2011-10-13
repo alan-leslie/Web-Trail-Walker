@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.*;
-import trailwebwalk.RandomWebWalkController;
+import trailwebwalk.WebWalkController;
 
 /*
  * User interface class for random web walker.
@@ -35,7 +35,7 @@ public class WebTrailWalkUI extends JFrame {
     private StopListener theStopListener = null;
     private NextListener theNextListener = null;
     private PreviousListener thePreviousListener = null;
-    private RandomWebWalkController theController = null;
+    private WebWalkController theController = null;
 
     // @param images - needs to be five images at least
     public WebTrailWalkUI(BufferedImage[] images) {
@@ -116,7 +116,8 @@ public class WebTrailWalkUI extends JFrame {
             theController.setNotificationDisplay(theStatusDisplay);
             PlayPauseDisplay thePlayPauseDisplay = new JButtonWrapper(playPauseButton, playIcon);
             theController.setPlayPauseDisplay(thePlayPauseDisplay);           
-            // todo add the list display theController.setPlayPauseDisplay(thePlayPauseDisplay);
+            ListItemSelector theListItemSelector = new JListWrapper(trailList);
+            theController.setListItemSelector(theListItemSelector);           
             taskThread = new Thread(theController);
 
             taskThread.setPriority(Thread.NORM_PRIORITY);
@@ -187,7 +188,7 @@ public class WebTrailWalkUI extends JFrame {
         return panel;
     }
 
-    public void setController(RandomWebWalkController newController) {
+    public void setController(WebWalkController newController) {
         theController = newController;
     }
 
