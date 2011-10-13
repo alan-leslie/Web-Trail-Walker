@@ -6,10 +6,12 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.*;
+import trailwebwalk.TrailItem;
 import trailwebwalk.WebWalkController;
 
 /*
@@ -49,10 +51,13 @@ public class WebTrailWalkUI extends JFrame {
 
     public void start() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        List<String> trailText = null;
+        List<String> trailText = new ArrayList<String>();
 
         if (theController != null) {
-            trailText = theController.getTrailText();
+            List<TrailItem> trailItems = theController.getTrailItems();
+            for(TrailItem theItem: trailItems){
+                trailText.add(theItem.getLabel());              
+            }           
         }
 
         setLayout(new BorderLayout());

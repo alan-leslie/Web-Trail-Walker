@@ -1,7 +1,5 @@
 package trailwebwalk;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.ExecutionException;
@@ -31,7 +29,6 @@ public class WebWalkController implements Runnable {
     private final WebWalkRunner theRunner;
     private volatile boolean taskStopped = false;
     private final int BETWEEN_PAGE_SLEEP_TIME; // time to wait between page refresh
-    private final WebWalkRunner.WalkType theType;
     private final Logger theLogger;
     private final String profileId; // the firefox profile identifier
     private String theBaseURL;  // the base URL 
@@ -47,11 +44,9 @@ public class WebWalkController implements Runnable {
      * @postcon - as per invariant.
      */
     public WebWalkController(Properties properties,
-            Logger newLogger) throws MalformedURLException {
+            Logger newLogger){
         theLogger = newLogger;
         exec = Executors.newSingleThreadExecutor();
-
-        theType = WebWalkRunner.WalkType.trail;
 
         String trailFile = properties.getProperty("TrailFileName", "");
         theRunner = new WebWalkRunner(trailFile, theLogger);
@@ -360,8 +355,8 @@ public class WebWalkController implements Runnable {
      * 
      * @return
      */
-    public List<String> getTrailText() {
-        List<String> retVal = theRunner.getTrailText();
+    public List<TrailItem> getTrailItems() {
+        List<TrailItem> retVal = theRunner.getTrailItems();
         return retVal;
     }
 
@@ -411,16 +406,12 @@ public class WebWalkController implements Runnable {
         }
         final WebWalkController other = (WebWalkController) obj;
 
-        if (this.theType != other.theType) {
-            return false;
-        }
         return true;
     }
 
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 97 * hash + (this.theType != null ? this.theType.hashCode() : 0);
         return hash;
     }
 }

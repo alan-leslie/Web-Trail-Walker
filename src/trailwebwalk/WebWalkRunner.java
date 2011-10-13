@@ -1,12 +1,10 @@
 package trailwebwalk;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.logging.Level;
@@ -39,16 +37,16 @@ public class WebWalkRunner {
         permissionDenied,
         pageTimedOut,
         pageNotFound,
-        failedStep, 
+        failedStep,
         complete
     };
 
     // type of walk - crucial to decision of where the walk starts, how a
     // random link is selected and decisions on walkStatus
     public enum WalkType {
+
         trail
     };
-    
     private Browser webBrowser = null;
     private final Logger theLogger;
     private WalkStatus walkStatus = WalkStatus.successfulStep;
@@ -56,8 +54,8 @@ public class WebWalkRunner {
     private String defaultLinkText = "";     // the link that should be selected if applicable
     private URL initialURL = null; // starting URL
     private final String theTrailFileName; // name of file that includes trail to be followed
-    private List<URL> theTrail = null;  // trail of urls to be visited
-    private ListIterator<URL> trailIterator = null;
+    private List<TrailItem> theTrail = null;  // trail of urls to be visited
+    private ListIterator<TrailItem> trailIterator = null;
 
     /**
      *
@@ -70,11 +68,11 @@ public class WebWalkRunner {
      */
     public WebWalkRunner(
             String trailFile,
-            Logger newLogger) throws MalformedURLException {
+            Logger newLogger) {
         defaultLinkText = "";
         theTrailFileName = trailFile;
         theLogger = newLogger;
-        
+
         initTrail();
     }
 
@@ -216,7 +214,7 @@ public class WebWalkRunner {
 
             if (trailIterator != null) {
                 if (trailIterator.hasNext()) {
-                    String theURL = trailIterator.next().toString();
+                    String theURL = trailIterator.next().getURL().toString();
                     webBrowser.gotoURL(theURL);
                 } else {
                     setStatus(WalkStatus.complete);
@@ -391,45 +389,42 @@ public class WebWalkRunner {
      * @postcon - as per invariant/return value
      */
     private void initTrail() {
-        theTrail = new ArrayList<URL>();
-        FileReader theReader = null;
+        theTrail = new ArrayList<TrailItem>();
+        List<String[]> fileData = CSVFile.getFileData(theTrailFileName);
 
-        try {
-            theReader = new FileReader(theTrailFileName);
-            BufferedReader in = new BufferedReader(theReader);
+        Iterator<String[]> theIterator = fileData.iterator();
 
-            String theURLAsString = null;
+        while (theIterator.hasNext()) {
+            String theLineArr[] = theIterator.next();
 
-            while ((theURLAsString = in.readLine()) != null) {
-                try {
-                    URL theTrailURL = new URL(theURLAsString);
-                    theTrail.add(theTrailURL);
-                } catch (MalformedURLException ex) {
-                    theLogger.log(Level.WARNING, "Failed making URL from{0}", theURLAsString);
+            if (theLineArr.length > 1) {
+                String theLabel = theLineArr[0];
+                String theURL = theLineArr[1].trim();
+                String theTarget = "";
+
+                if (theLineArr.length > 2) {
+                    theTarget = theLineArr[2].trim();
                 }
-            }
-        } catch (IOException e) {
-            // ...
-        } finally {
-            if (null != theReader) {
+
                 try {
-                    theReader.close();
-                } catch (IOException e) {
-                    /* .... */
+                    URL theTrailURL = new URL(theURL);
+                    TrailItem theTrailItem = new TrailItem(theLabel, theTrailURL, theTarget);
+                    theTrail.add(theTrailItem);
+                } catch (MalformedURLException ex) {
+                    theLogger.log(Level.WARNING, "Failed making URL from{0}", theURL);
                 }
             }
         }
 
         trailIterator = theTrail.listIterator();
         if (trailIterator.hasNext()) {
-            initialURL = trailIterator.next();
+            initialURL = trailIterator.next().getURL();
         }
     }
-    
-    
+
     int getCurrentTrailPos() {
         if (trailIterator != null) {
-            int thePos = trailIterator.nextIndex()-1;
+            int thePos = trailIterator.nextIndex() - 1;
             return thePos;
         }
 
@@ -452,11 +447,11 @@ public class WebWalkRunner {
         return true;
     }
 
-    List<String> getTrailText() {
-        List<String> retVal = new ArrayList<String>();
+    List<TrailItem> getTrailItems() {
+        List<TrailItem> retVal = new ArrayList<TrailItem>();
         if (theTrail != null) {
-            for (URL theTrailURL : theTrail) {
-                retVal.add(theTrailURL.getPath());
+            for (TrailItem theTrailItem : theTrail) {
+                retVal.add(theTrailItem);
             }
         }
 
@@ -472,7 +467,7 @@ public class WebWalkRunner {
             return false;
         }
         final WebWalkRunner other = (WebWalkRunner) obj;
-        
+
         if ((this.defaultLinkText == null) ? (other.defaultLinkText != null) : !this.defaultLinkText.equals(other.defaultLinkText)) {
             return false;
         }
