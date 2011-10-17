@@ -3,12 +3,15 @@ package trailwebwalk.browser;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.security.auth.login.LoginException;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathExpression;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
@@ -287,7 +290,7 @@ public class Browser {
 
         return theResult;
     }
-    
+
     /**
      * @param link - a valid hyperlink
      * @return - whether the URL referred to in the link has recently been
@@ -295,7 +298,6 @@ public class Browser {
      * @precon - as per invariant.
      * @postcon -as per invariant/return spec.
      */
-
     public boolean hasAlreadyBeenVisited(Hyperlink link) {
         boolean isFound = false;
         theLogger.log(Level.INFO, "Checking the link {0}", link.theLinkIdStr);
@@ -303,7 +305,7 @@ public class Browser {
         if (!pageList.isEmpty()) {
             String theLinkHref = link.getHref();
 
-            if(theLinkHref.indexOf('/') == 0){
+            if (theLinkHref.indexOf('/') == 0) {
                 String theCurrentPagesURL = getCurrentPage().getURL();
                 try {
                     URL theURL = new URL(theCurrentPagesURL);
@@ -333,6 +335,24 @@ public class Browser {
         }
 
         return isFound;
+    }
+
+    /**
+     * 
+     * @param xpathForTarget
+     * @throws XPathExpressionException
+     */
+    public void clickOnXPathItem(String xpathForTarget) throws XPathExpressionException {
+        XPathFactory factory = XPathFactory.newInstance();
+        XPath xpath = factory.newXPath();
+        XPathExpression expr = xpath.compile(xpathForTarget);
+//        XPath infoboxTableXpath = XPathFactory.newInstance().newXPath();
+
+        WebElement theTarget = webDriver.findByXPath(xpathForTarget);
+
+        if (theTarget != null) {
+            webDriver.clickElement(theTarget);
+        }
     }
 
     /**

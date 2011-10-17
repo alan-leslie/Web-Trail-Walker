@@ -226,9 +226,12 @@ public class WebWalkController implements Runnable {
     public synchronized void pauseTask() {
         theLogger.log(Level.INFO, "Pausing");
         taskStopped = true;
-        statusLabel.setText("Walking interrupted/paused");
-        playPauseDisplay.setToPlay();
-        theRunner.pause();
+        
+        if(theRunner != null){
+            statusLabel.setText("Walking interrupted/paused");
+            playPauseDisplay.setToPlay();
+            theRunner.pause();
+        }
     }
 
     /**

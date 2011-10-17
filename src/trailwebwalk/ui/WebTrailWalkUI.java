@@ -31,7 +31,7 @@ public class WebTrailWalkUI extends JFrame {
     private JButton stopButton;
     private JButton nextButton;
     private JButton previousButton;
-    private JList trailList;
+    private ToggleJList trailList;
     private Thread taskThread = null;
     private PlayPauseListener thePlayPauseListener = null;
     private StopListener theStopListener = null;
@@ -178,8 +178,9 @@ public class WebTrailWalkUI extends JFrame {
             listModel.addElement(trailItem);
         }
 
-        trailList = new JList(listModel);
+        trailList = new ToggleJList(listModel);
         trailList.setSelectedIndex(0);
+//        trailList.setSelectedValue(trailText.get(0), true);
         trailList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         trailList.setLayoutOrientation(JList.VERTICAL);
         trailList.setVisibleRowCount(-1);
@@ -198,7 +199,7 @@ public class WebTrailWalkUI extends JFrame {
     }
 
     private void setEnableNextPrevButtons(boolean isEnabled) {
-        if(isEnabled){
+        if(isEnabled){          
             if (theController.isAtStart()) {
                 previousButton.setEnabled(false);
             } else {
@@ -213,7 +214,9 @@ public class WebTrailWalkUI extends JFrame {
         } else {
             previousButton.setEnabled(isEnabled);
             nextButton.setEnabled(isEnabled);
-        }
+        }       
+                    
+        trailList.setEnableUserSelection(isEnabled);
     }
 
     void prev() {

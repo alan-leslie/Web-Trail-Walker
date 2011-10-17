@@ -59,10 +59,8 @@ public class WebWalkRunner {
 
     /**
      *
-     * @param newType - the type of walk required
      * @param trailFile 
      * @param newLogger - valid logger for output info
-     * @throws MalformedURLException 
      * @precon - as per invariant/param spec
      * @postcon - as per invariant
      */
@@ -214,8 +212,24 @@ public class WebWalkRunner {
 
             if (trailIterator != null) {
                 if (trailIterator.hasNext()) {
-                    String theURL = trailIterator.next().getURL().toString();
+                    TrailItem theItem = trailIterator.next();
+                    String theURL = theItem.getURL().toString();
                     webBrowser.gotoURL(theURL);
+                    String theTargetType = theItem.getTargetType(); 
+                    
+                    if(!theTargetType.isEmpty()){
+                        String theTargetValue = theItem.getTargetValue(); 
+                        String theTargetAttribute = theItem.getTargetAttribute();
+                        String theFullTargetXPath = "html/body//" + theTargetType + "[@" + theTargetAttribute + "='" + theTargetValue + "']";
+
+                        // getting to the target is a bonus - it fails just ignore it
+                        try{
+                          webBrowser.clickOnXPathItem(theFullTargetXPath);
+                        } catch (Exception theEx) {
+                            theLogger.log(Level.WARNING, 
+                                    "Failed to click target", theEx);
+                        }        
+                    }
                 } else {
                     setStatus(WalkStatus.complete);
                 }
@@ -390,7 +404,7 @@ public class WebWalkRunner {
      */
     private void initTrail() {
         theTrail = new ArrayList<TrailItem>();
-        List<String[]> fileData = CSVFile.getFileData(theTrailFileName);
+        List<String[]> fileData = CSVFile.getFileData(theTrailFileName, "\\|");
 
         Iterator<String[]> theIterator = fileData.iterator();
 
@@ -400,15 +414,20 @@ public class WebWalkRunner {
             if (theLineArr.length > 1) {
                 String theLabel = theLineArr[0];
                 String theURL = theLineArr[1].trim();
-                String theTarget = "";
-
-                if (theLineArr.length > 2) {
-                    theTarget = theLineArr[2].trim();
+                String theTargetAttribute = "";
+                String theTargetValue = "";                
+                String theTargetType = "";
+                
+                if (theLineArr.length > 4) {
+                    theTargetType = theLineArr[2].trim();                    
+                    theTargetAttribute = theLineArr[3].trim();
+                    theTargetValue = theLineArr[4].trim();
                 }
 
                 try {
                     URL theTrailURL = new URL(theURL);
-                    TrailItem theTrailItem = new TrailItem(theLabel, theTrailURL, theTarget);
+                    TrailItem theTrailItem = new TrailItem(theLabel, 
+                            theTrailURL, theTargetType, theTargetAttribute, theTargetValue);
                     theTrail.add(theTrailItem);
                 } catch (MalformedURLException ex) {
                     theLogger.log(Level.WARNING, "Failed making URL from{0}", theURL);
@@ -433,7 +452,11 @@ public class WebWalkRunner {
 
     boolean isAtEnd() {
         if (trailIterator != null) {
-            return !trailIterator.hasNext();
+            int theCurrIndex = getCurrentTrailPos();
+            
+            if(theCurrIndex < (theTrail.size() -1)){
+                return false;
+            }
         }
 
         return true;
@@ -441,7 +464,11 @@ public class WebWalkRunner {
 
     boolean isAtStart() {
         if (trailIterator != null) {
-            return !trailIterator.hasPrevious();
+            int theCurrIndex = getCurrentTrailPos();
+            
+            if(theCurrIndex > 0){
+                return false;
+            }
         }
 
         return true;

@@ -28,7 +28,7 @@ public class Main {
     // TODO -
     // Dead end page for case when it is a form
     public static void main(String[] args) throws IOException {
-        String[] ids = {"PLBCKPause.png", "PLBCKPlay.png", "PLBCKStop.png", "PLBCKNext.png", "PLBCKLast.png"};
+        String[] ids = {"Pause24.gif", "Play24.gif", "Stop24.gif", "Next24.gif", "Prev24.gif"};
         BufferedImage[] images = new BufferedImage[ids.length];
         for (int j = 0; j < images.length; j++) {
             images[j] = ImageIO.read(new File(ids[j]));

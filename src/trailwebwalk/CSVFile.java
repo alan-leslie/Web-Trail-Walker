@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package trailwebwalk;
 
 import java.io.BufferedReader;
@@ -15,7 +11,8 @@ import java.util.List;
  * @author al
  */
 public class CSVFile {
-    public static List<String[]> getFileData(String fileName) {
+    public static List<String[]> getFileData(String fileName, 
+            String splitChar) {
         FileReader theReader = null;
         List<String[]> retVal = new ArrayList<String[]>();
 
@@ -26,7 +23,7 @@ public class CSVFile {
             String theLine = null;
             
             while ((theLine = in.readLine()) != null) {
-                String theLineArr[] = theLine.split(",");
+                String theLineArr[] = theLine.split(splitChar);
                 retVal.add(theLineArr);
             }
         } catch (IOException e) {
