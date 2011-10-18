@@ -56,17 +56,20 @@ public class WebWalkRunner {
     private final String theTrailFileName; // name of file that includes trail to be followed
     private List<TrailItem> theTrail = null;  // trail of urls to be visited
     private ListIterator<TrailItem> trailIterator = null;
+    private String profileId = "";
 
     /**
      *
+     * @param profileId 
      * @param trailFile 
      * @param newLogger - valid logger for output info
      * @precon - as per invariant/param spec
      * @postcon - as per invariant
      */
-    public WebWalkRunner(
+    public WebWalkRunner(String profileId,
             String trailFile,
             Logger newLogger) {
+        this.profileId = profileId;
         defaultLinkText = "";
         theTrailFileName = trailFile;
         theLogger = newLogger;
@@ -84,9 +87,6 @@ public class WebWalkRunner {
 
     /**
      * Start up the walk by logging into the web site if required.
-     * @param idString - a valid iidentifier or null
-     * @param passwordString - the password for the identifier or null
-     * @param profileId - a profile (defaults if invalid) identifier or null
      * @throws WebDriverException - when the browser is invalid (e.g. the
      * attached firefox browser has been shut down without a pause/stop)
      * @precon - as per invariant/param spec
@@ -96,12 +96,12 @@ public class WebWalkRunner {
      * timeout.
      * @postcon - as per invariant
      */
-    public void startUp(String idString,
-            String passwordString,
-            String profileId) throws WebDriverException {
+    public void startUp() throws WebDriverException {
         theLogger.log(Level.INFO, "Start up");
         webBrowser = new Browser(profileId, theLogger);
         boolean isStumbleUpon = false;
+        String idString = "";
+        String passwordString = "";
 
         try {
             webBrowser.start(initialURL, isStumbleUpon, idString, passwordString);
@@ -215,23 +215,105 @@ public class WebWalkRunner {
                     TrailItem theItem = trailIterator.next();
                     String theURL = theItem.getURL().toString();
                     webBrowser.gotoURL(theURL);
-                    String theTargetType = theItem.getTargetType(); 
-                    
-                    if(!theTargetType.isEmpty()){
-                        String theTargetValue = theItem.getTargetValue(); 
+                    String theTargetType = theItem.getTargetType();
+
+                    if (!theTargetType.isEmpty()) {
+                        String theTargetValue = theItem.getTargetValue();
                         String theTargetAttribute = theItem.getTargetAttribute();
                         String theFullTargetXPath = "html/body//" + theTargetType + "[@" + theTargetAttribute + "='" + theTargetValue + "']";
 
                         // getting to the target is a bonus - it fails just ignore it
-                        try{
-                          webBrowser.clickOnXPathItem(theFullTargetXPath);
+                        try {
+                            webBrowser.clickOnXPathItem(theFullTargetXPath);
                         } catch (Exception theEx) {
-                            theLogger.log(Level.WARNING, 
+                            theLogger.log(Level.WARNING,
                                     "Failed to click target", theEx);
-                        }        
+                        }
                     }
                 } else {
                     setStatus(WalkStatus.complete);
+                }
+            }
+
+            Page newPage = webBrowser.getCurrentPage();
+            String newPageURL = newPage.getURL();
+            theLogger.log(Level.INFO, "New page: {0}", newPageURL);
+
+            if (checkStatus() != WalkStatus.complete) {
+                setStatus(WalkStatus.successfulStep);
+            }
+
+            theLogger.log(Level.INFO, "Status set");
+        } catch (WebDriverException theEx) {
+            if (isExceptionTimeout(theEx)) {
+                theLogger.log(Level.WARNING,
+                        "Socket Timeout exception", theEx);
+                webBrowser.stopPageLoad();
+                setStatus(WalkStatus.pageTimedOut);
+            } else {
+                throw theEx;
+            }
+        }
+
+        if (!(checkStatus() == WalkStatus.successfulStep
+                || checkStatus() == WalkStatus.complete)
+                && failureCount > 3) {
+            setStatus(WalkStatus.failedStep);
+        }
+    }
+
+    /**
+     * steps forward to next random link.
+     * @param trailPos 
+     * @precon - as per invariant
+     * @postcon - that the browser has moved on one page and status is set to
+     * success.
+     * @postcon - or status is set as failed after x number of incorrect attempts.
+     * @postcon - or status is set to a value that reflects the reason for failure.
+     * @throws WebDriverException - if the step forward fails because of socket
+     * timeout.
+     */
+    public void stepTo(int trailPos) throws WebDriverException {
+        theLogger.log(Level.INFO, "Step");
+        String currentPageURL = webBrowser.getCurrentPageURL();
+
+        theLogger.log(Level.INFO, "Current page: {0}",
+                currentPageURL);
+        try {
+            int theCurrentPos = getCurrentTrailPos();
+
+            if (trailIterator != null
+                    && theCurrentPos != trailPos) {
+                TrailItem theItem = null;
+
+                if (theCurrentPos < trailPos) {
+                    while (getCurrentTrailPos() < trailPos
+                            && trailIterator.hasNext()) {
+                        theItem = trailIterator.next();
+                    }
+                } else {
+                    while (getCurrentTrailPos() > (trailPos - 1)
+                            && trailIterator.hasPrevious()) {
+                        theItem = trailIterator.previous();
+                    }
+                }
+
+                String theURL = theItem.getURL().toString();
+                webBrowser.gotoURL(theURL);
+                String theTargetType = theItem.getTargetType();
+
+                if (!theTargetType.isEmpty()) {
+                    String theTargetValue = theItem.getTargetValue();
+                    String theTargetAttribute = theItem.getTargetAttribute();
+                    String theFullTargetXPath = "html/body//" + theTargetType + "[@" + theTargetAttribute + "='" + theTargetValue + "']";
+
+                    // getting to the target is a bonus - it fails just ignore it
+                    try {
+                        webBrowser.clickOnXPathItem(theFullTargetXPath);
+                    } catch (Exception theEx) {
+                        theLogger.log(Level.WARNING,
+                                "Failed to click target", theEx);
+                    }
                 }
             }
 
@@ -415,18 +497,18 @@ public class WebWalkRunner {
                 String theLabel = theLineArr[0];
                 String theURL = theLineArr[1].trim();
                 String theTargetAttribute = "";
-                String theTargetValue = "";                
+                String theTargetValue = "";
                 String theTargetType = "";
-                
+
                 if (theLineArr.length > 4) {
-                    theTargetType = theLineArr[2].trim();                    
+                    theTargetType = theLineArr[2].trim();
                     theTargetAttribute = theLineArr[3].trim();
                     theTargetValue = theLineArr[4].trim();
                 }
 
                 try {
                     URL theTrailURL = new URL(theURL);
-                    TrailItem theTrailItem = new TrailItem(theLabel, 
+                    TrailItem theTrailItem = new TrailItem(theLabel,
                             theTrailURL, theTargetType, theTargetAttribute, theTargetValue);
                     theTrail.add(theTrailItem);
                 } catch (MalformedURLException ex) {
@@ -441,7 +523,11 @@ public class WebWalkRunner {
         }
     }
 
-    int getCurrentTrailPos() {
+    /**
+     * 
+     * @return
+     */
+    public int getCurrentTrailPos() {
         if (trailIterator != null) {
             int thePos = trailIterator.nextIndex() - 1;
             return thePos;
@@ -450,11 +536,15 @@ public class WebWalkRunner {
         return 0;
     }
 
-    boolean isAtEnd() {
+    /**
+     * 
+     * @return
+     */
+    public boolean isAtEnd() {
         if (trailIterator != null) {
             int theCurrIndex = getCurrentTrailPos();
-            
-            if(theCurrIndex < (theTrail.size() -1)){
+
+            if (theCurrIndex < (theTrail.size() - 1)) {
                 return false;
             }
         }
@@ -462,11 +552,15 @@ public class WebWalkRunner {
         return true;
     }
 
-    boolean isAtStart() {
+    /**
+     * 
+     * @return
+     */
+    public boolean isAtStart() {
         if (trailIterator != null) {
             int theCurrIndex = getCurrentTrailPos();
-            
-            if(theCurrIndex > 0){
+
+            if (theCurrIndex > 0) {
                 return false;
             }
         }
@@ -474,7 +568,11 @@ public class WebWalkRunner {
         return true;
     }
 
-    List<TrailItem> getTrailItems() {
+    /**
+     * 
+     * @return
+     */
+    public List<TrailItem> getTrailItems() {
         List<TrailItem> retVal = new ArrayList<TrailItem>();
         if (theTrail != null) {
             for (TrailItem theTrailItem : theTrail) {

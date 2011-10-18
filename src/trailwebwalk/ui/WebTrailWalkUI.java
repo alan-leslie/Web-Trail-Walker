@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.*;
+import javax.swing.event.ListSelectionListener;
 import trailwebwalk.TrailItem;
 import trailwebwalk.WebWalkController;
 
@@ -21,6 +22,7 @@ import trailwebwalk.WebWalkController;
  * two buttons indicating whether the program is running pausec or stopped.
  */
 public class WebTrailWalkUI extends JFrame {
+
     private ImageIcon pauseIcon;
     private ImageIcon playIcon;
     private ImageIcon stopIcon;
@@ -31,7 +33,7 @@ public class WebTrailWalkUI extends JFrame {
     private JButton stopButton;
     private JButton nextButton;
     private JButton previousButton;
-    private ToggleJList trailList;
+    private JList trailList;
     private Thread taskThread = null;
     private PlayPauseListener thePlayPauseListener = null;
     private StopListener theStopListener = null;
@@ -55,9 +57,9 @@ public class WebTrailWalkUI extends JFrame {
 
         if (theController != null) {
             List<TrailItem> trailItems = theController.getTrailItems();
-            for(TrailItem theItem: trailItems){
-                trailText.add(theItem.getLabel());              
-            }           
+            for (TrailItem theItem : trailItems) {
+                trailText.add(theItem.getLabel());
+            }
         }
 
         setLayout(new BorderLayout());
@@ -65,8 +67,16 @@ public class WebTrailWalkUI extends JFrame {
         getContentPane().add(getListPanel(trailText));
         getContentPane().add(getButtonPanel(), BorderLayout.PAGE_END);
         setSize(200, 350);
-        setLocation(1050, 550);
-        setEnableNextPrevButtons(false);
+        setLocation(1050, 550);          
+                
+        WalkStatusDisplay theStatusDisplay = new JLabelWrapper(statusLabel);
+        theController.setNotificationDisplay(theStatusDisplay);
+        PlayPauseDisplay thePlayPauseDisplay = new JButtonWrapper(playPauseButton, playIcon);
+        theController.setPlayPauseDisplay(thePlayPauseDisplay);
+        ListItemSelector theListItemSelector = new JListWrapper(trailList);
+        theController.setListItemSelector(theListItemSelector);
+        
+        setEnableNextPrevButtons(true);
         setVisible(true);
     }
 
@@ -75,9 +85,9 @@ public class WebTrailWalkUI extends JFrame {
             setEnableNextPrevButtons(false);
 
             if (theController != null) {
-                    System.out.println("play - setting icon to pause");
-                    playPauseButton.setIcon(pauseIcon);
-                    walk();
+                System.out.println("play - setting icon to pause");
+                playPauseButton.setIcon(pauseIcon);
+                walk();
             }
         }
     }
@@ -117,12 +127,6 @@ public class WebTrailWalkUI extends JFrame {
         if (isPlaying()) {
             System.out.println("Thread is running - not starting new task");
         } else {
-            WalkStatusDisplay theStatusDisplay = new JLabelWrapper(statusLabel);
-            theController.setNotificationDisplay(theStatusDisplay);
-            PlayPauseDisplay thePlayPauseDisplay = new JButtonWrapper(playPauseButton, playIcon);
-            theController.setPlayPauseDisplay(thePlayPauseDisplay);           
-            ListItemSelector theListItemSelector = new JListWrapper(trailList);
-            theController.setListItemSelector(theListItemSelector);           
             taskThread = new Thread(theController);
 
             taskThread.setPriority(Thread.NORM_PRIORITY);
@@ -178,12 +182,14 @@ public class WebTrailWalkUI extends JFrame {
             listModel.addElement(trailItem);
         }
 
-        trailList = new ToggleJList(listModel);
-        trailList.setSelectedIndex(0);
-//        trailList.setSelectedValue(trailText.get(0), true);
+        trailList = new JList(listModel);
+//        trailList.setSelectedValue(listModel.getElementAt(0), true);
         trailList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        trailList.setSelectedIndex(0);
         trailList.setLayoutOrientation(JList.VERTICAL);
         trailList.setVisibleRowCount(-1);
+        ListSelectionListener listListener = new TrailListSelectionListener(this, trailList);
+        trailList.addListSelectionListener(listListener);      
 
         JScrollPane listScrollPane = new JScrollPane(trailList);
         JPanel panel = new JPanel(new BorderLayout());
@@ -199,7 +205,7 @@ public class WebTrailWalkUI extends JFrame {
     }
 
     private void setEnableNextPrevButtons(boolean isEnabled) {
-        if(isEnabled){          
+        if (isEnabled) {
             if (theController.isAtStart()) {
                 previousButton.setEnabled(false);
             } else {
@@ -214,22 +220,29 @@ public class WebTrailWalkUI extends JFrame {
         } else {
             previousButton.setEnabled(isEnabled);
             nextButton.setEnabled(isEnabled);
-        }       
-                    
-        trailList.setEnableUserSelection(isEnabled);
+        }
     }
 
     void prev() {
-        theController.stepBack();
         int theTrailPos = theController.getCurrentTrailPos();
-        trailList.setSelectedIndex(theTrailPos);
+        theController.stepTo(theTrailPos -1);
+        trailList.setSelectedIndex(theTrailPos - 1);
+        statusLabel.setText("");
         setEnableNextPrevButtons(true);
     }
 
     void next() {
-        theController.stepForward();
         int theTrailPos = theController.getCurrentTrailPos();
-        trailList.setSelectedIndex(theTrailPos);
+        theController.stepTo(theTrailPos + 1);
+        trailList.setSelectedIndex(theTrailPos + 1);
+        
+        statusLabel.setText("");
         setEnableNextPrevButtons(true);
+    }
+
+    void stepTo(int theNewIndex) {
+        if(theNewIndex != theController.getCurrentTrailPos()){
+            theController.stepTo(theNewIndex);
+        }
     }
 }

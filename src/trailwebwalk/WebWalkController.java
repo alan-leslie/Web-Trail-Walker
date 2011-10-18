@@ -39,17 +39,17 @@ public class WebWalkController implements Runnable {
      *
      * @param properties - got from the Random.properties file.
      * @param newLogger - valid logger.
-     * @throws MalformedURLException 
      * @precon - as per param spec.
      * @postcon - as per invariant.
      */
     public WebWalkController(Properties properties,
-            Logger newLogger){
+            Logger newLogger) {
         theLogger = newLogger;
         exec = Executors.newSingleThreadExecutor();
 
         String trailFile = properties.getProperty("TrailFileName", "");
-        theRunner = new WebWalkRunner(trailFile, theLogger);
+        profileId = properties.getProperty("ProfileId");
+        theRunner = new WebWalkRunner(profileId, trailFile, theLogger);
 
         String sleepTimeProperty = properties.getProperty("SleepTime");
 
@@ -60,8 +60,6 @@ public class WebWalkController implements Runnable {
         } else {
             BETWEEN_PAGE_SLEEP_TIME = 25;
         }
-
-        profileId = properties.getProperty("ProfileId");
     }
 
     /**
@@ -75,18 +73,6 @@ public class WebWalkController implements Runnable {
         taskStopped = false;
 
         try {
-            start();
-
-            WebWalkRunner.WalkStatus runnerStatus = theRunner.checkStatus();
-
-            if (runnerStatus != WebWalkRunner.WalkStatus.successfulStep) {
-                pauseTask();
-                statusLabel.setText("Walking failed");
-                return;
-            } else {
-                pauseBetweenPages(runnerStatus);
-            }
-
             while (!isTaskStopped()) {
                 step();
 
@@ -139,13 +125,13 @@ public class WebWalkController implements Runnable {
     public void setPlayPauseDisplay(PlayPauseDisplay newPlayPauseDisplay) {
         playPauseDisplay = newPlayPauseDisplay;
     }
-    
+
     /**
      * Sets the listItemSelector display to the specified param.
      * @param theListItemSelector 
-     */    
+     */
     public void setListItemSelector(ListItemSelector theListItemSelector) {
-        listItemSelector = theListItemSelector; 
+        listItemSelector = theListItemSelector;
     }
 
     /**
@@ -154,7 +140,7 @@ public class WebWalkController implements Runnable {
     private void start() {
         if (!theRunner.isStarted()) {
             theRunner.stop();
-            theRunner.startUp("", "", profileId);
+            theRunner.startUp();
         } else {
             theRunner.restore();
         }
@@ -226,8 +212,8 @@ public class WebWalkController implements Runnable {
     public synchronized void pauseTask() {
         theLogger.log(Level.INFO, "Pausing");
         taskStopped = true;
-        
-        if(theRunner != null){
+
+        if (theRunner != null) {
             statusLabel.setText("Walking interrupted/paused");
             playPauseDisplay.setToPlay();
             theRunner.pause();
@@ -310,52 +296,6 @@ public class WebWalkController implements Runnable {
 
     /**
      * 
-     * @return 
-     */
-    public int stepBack() {
-        if (!isTaskStopped()) {
-            pauseTask();
-        }
-
-        GoBackWorker goBackWorker = new GoBackWorker(theRunner);
-
-        try {
-            exec.submit(goBackWorker).get();          
-        } catch (InterruptedException ex) {
-            theLogger.log(Level.SEVERE, null, ex);
-        } catch (ExecutionException ex) {
-            theLogger.log(Level.SEVERE, null, ex);
-        }
-        
-        return 0;
-    }
-
-    /**
-     * 
-     * @return 
-     */
-    public int stepForward() {
-        if (!isTaskStopped()) {
-            pauseTask();
-        }
-
-        if (!theRunner.isAtEnd()) {
-            StepWorker stepWorker = new StepWorker(theRunner);
-
-            try {
-                exec.submit(stepWorker).get();
-            } catch (InterruptedException ex) {
-                theLogger.log(Level.SEVERE, null, ex);
-            } catch (ExecutionException ex) {
-                theLogger.log(Level.SEVERE, null, ex);
-            }
-        }
-        
-        return 0;
-    }
-
-    /**
-     * 
      * @return
      */
     public List<TrailItem> getTrailItems() {
@@ -374,7 +314,7 @@ public class WebWalkController implements Runnable {
 
         return 0;
     }
-        
+
     /**
      * 
      * @return
@@ -399,6 +339,23 @@ public class WebWalkController implements Runnable {
         return true;
     }
 
+    /**
+     * 
+     */
+    public void startUp() {
+        if (!theRunner.isAtEnd()) {
+            StartWorker startWorker = new StartWorker(theRunner);
+
+            try {
+                exec.submit(startWorker).get();
+            } catch (InterruptedException ex) {
+                theLogger.log(Level.SEVERE, null, ex);
+            } catch (ExecutionException ex) {
+                theLogger.log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (obj == null) {
@@ -416,5 +373,23 @@ public class WebWalkController implements Runnable {
     public int hashCode() {
         int hash = 7;
         return hash;
+    }
+
+    public void stepTo(int theNewIndex) {
+        if (!isTaskStopped()) {
+            pauseTask();
+        }
+
+        if (!theRunner.isAtEnd()) {
+            StepToWorker stepWorker = new StepToWorker(theRunner, theNewIndex);
+
+            try {
+                exec.submit(stepWorker).get();
+            } catch (InterruptedException ex) {
+                theLogger.log(Level.SEVERE, null, ex);
+            } catch (ExecutionException ex) {
+                theLogger.log(Level.SEVERE, null, ex);
+            }
+        }
     }
 }

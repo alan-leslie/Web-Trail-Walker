@@ -56,6 +56,7 @@ public class Main {
         WebTrailWalkUI theUI = new WebTrailWalkUI(images);
         WebWalkController theController = new WebWalkController(properties, theLogger);
         theUI.setController(theController);
+        theController.startUp();
         theUI.start();
     }
 

@@ -1,3 +1,4 @@
+
 package trailwebwalk;
 
 import java.util.concurrent.Callable;
@@ -6,23 +7,26 @@ import java.util.concurrent.Callable;
  *
  * @author al
  */
-public class StepWorker implements Callable<Boolean> {
+public class StepToWorker implements Callable<Boolean> {
     private final WebWalkRunner theRunner;
+    private final int newIndex;
 
-    public StepWorker(WebWalkRunner theRunner) {
+    public StepToWorker(WebWalkRunner theRunner,
+            int theNewIndex) {
         this.theRunner = theRunner;
+        this.newIndex = theNewIndex;
     }
 
     public Boolean call() {
         Boolean result = true;
 
         try {
-            theRunner.step();
+            theRunner.stepTo(newIndex);
         } catch (Exception exc) {
             System.out.println(exc.toString());
             result = false;
         }
 
         return result;
-    }
+    }   
 }
