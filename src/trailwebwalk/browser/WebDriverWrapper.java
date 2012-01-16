@@ -4,12 +4,17 @@
  */
 package trailwebwalk.browser;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.By;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -171,5 +176,10 @@ public class WebDriverWrapper {
 
     synchronized String getElementText(WebElement webElement) {
         return webElement.getText();
+    }  
+        
+    synchronized void screenDump(String filePathName) throws IOException {
+        File scrFile = ((TakesScreenshot)webDriver).getScreenshotAs(OutputType.FILE);
+        FileUtils.copyFile(scrFile, new File(filePathName));
     }
 }

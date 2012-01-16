@@ -1,5 +1,6 @@
 package trailwebwalk.browser;
 
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -390,5 +391,9 @@ public class Browser {
         }
 
         return theResult;
+    }
+     
+    public void dumpScreen(String dumpFilePath) throws IOException {
+        webDriver.screenDump(dumpFilePath);
     }
 }

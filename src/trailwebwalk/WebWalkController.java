@@ -60,6 +60,12 @@ public class WebWalkController implements Runnable {
         } else {
             BETWEEN_PAGE_SLEEP_TIME = 25;
         }
+                      
+        String shouldDumpScreenString = properties.getProperty("ShouldDumpScreen", "false");
+        
+        if(shouldDumpScreenString.equalsIgnoreCase("true")){
+            theRunner.setShouldDump(true);
+        }
     }
 
     /**
