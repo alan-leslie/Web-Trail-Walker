@@ -38,7 +38,7 @@ public class Main {
         FileInputStream is = null;
         
         try {
-            is = new FileInputStream( "RandomWalk.properties" );
+            is = new FileInputStream( "WebTrailWalk.properties" );
             properties.load( is );
         } catch( IOException e ) {
             // ...
@@ -65,7 +65,7 @@ public class Main {
      * @return - valid logger (single file).
      */
     private static Logger makeLogger() {
-        Logger lgr = Logger.getLogger("RandomWebWalk");
+        Logger lgr = Logger.getLogger("WebTrailWalk");
         lgr.setUseParentHandlers(false);
         lgr.addHandler(simpleFileHandler());
         return lgr;
@@ -77,7 +77,7 @@ public class Main {
      */
     private static FileHandler simpleFileHandler() {
         try {
-            FileHandler hdlr = new FileHandler("RandomWebWalkRunner.log");
+            FileHandler hdlr = new FileHandler("WebTrailWalker.log");
             hdlr.setFormatter(new SimpleFormatter());
             return hdlr;
         } catch (Exception e) {

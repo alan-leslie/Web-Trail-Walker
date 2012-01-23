@@ -1,0 +1,32 @@
+23-Jan-2012 08:42:15 trailwebwalk.WebWalkRunner initTrail
+WARNING: Failed making URL froma
+23-Jan-2012 08:42:15 trailwebwalk.WebWalkRunner initTrail
+WARNING: Failed making URL froma
+23-Jan-2012 08:42:15 trailwebwalk.WebWalkRunner startUp
+INFO: Start up
+23-Jan-2012 08:42:37 trailwebwalk.WebWalkRunner setStatus
+INFO: SetStatus: successfulStep
+23-Jan-2012 08:42:42 trailwebwalk.WebWalkController pauseTask
+INFO: Pausing
+23-Jan-2012 08:42:42 trailwebwalk.WebWalkRunner setStatus
+INFO: SetStatus: successfulStep
+23-Jan-2012 08:42:42 trailwebwalk.WebWalkRunner stepTo
+INFO: Step
+23-Jan-2012 08:42:42 trailwebwalk.WebWalkRunner stepTo
+INFO: Current page: http://en.wikipedia.org/wiki/Samuel_Peploe
+23-Jan-2012 08:42:49 trailwebwalk.WebWalkRunner stepTo
+INFO: New page: http://www.nationalgalleries.org/collection/artists-a-z/P/3623/artistName/Samuel%20John%20Peploe/recordId/3469
+23-Jan-2012 08:42:49 trailwebwalk.WebWalkRunner setStatus
+INFO: SetStatus: successfulStep
+23-Jan-2012 08:42:49 trailwebwalk.WebWalkRunner stepTo
+INFO: Status set
+23-Jan-2012 08:44:10 trailwebwalk.WebWalkController stopTask
+INFO: Stopping
+23-Jan-2012 08:44:10 trailwebwalk.WebWalkController pauseTask
+INFO: Pausing
+23-Jan-2012 08:44:10 trailwebwalk.WebWalkRunner setStatus
+INFO: SetStatus: successfulStep
+23-Jan-2012 08:44:10 trailwebwalk.WebWalkRunner stop
+INFO: Stop
+23-Jan-2012 08:44:11 trailwebwalk.WebWalkRunner setStatus
+INFO: SetStatus: successfulStep

@@ -355,10 +355,21 @@ public class WebWalkRunner {
             }
         }
 
-        if (!(checkStatus() == WalkStatus.successfulStep
-                || checkStatus() == WalkStatus.complete)
-                && failureCount > 3) {
-            setStatus(WalkStatus.failedStep);
+       if (checkStatus() == WalkStatus.successfulStep) {
+            if(shouldDumpScreen){
+                String dumpFilePath = dumpDirName + "/dump" + Integer.toString(dumpFileNumber) + ".png";
+                
+                try {
+                    webBrowser.dumpScreen(dumpFilePath);
+                    ++dumpFileNumber;
+                } catch (IOException ex) {
+                    theLogger.log(Level.WARNING, null, ex);
+                }
+            }
+        } else {
+            if (failureCount > 3) {
+                setStatus(WalkStatus.failedStep);
+            }
         }
     }
 
