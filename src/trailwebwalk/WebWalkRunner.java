@@ -31,13 +31,13 @@ import trailwebwalk.browser.Page;
  * Normally expect to have only one object of this class in a program.
  */
 public class WebWalkRunner {
+
     private boolean shouldDumpScreen = false;
     private String dumpDirBase = "./dumpDir";
-    private String dumpDirName = dumpDirBase;    
+    private String dumpDirName = dumpDirBase;
     private int dumpFileNumber = 1;
-    
-    // enum indication of the current status of the walk
 
+    // enum indication of the current status of the walk
     public enum WalkStatus {
 
         successfulStep,
@@ -213,6 +213,11 @@ public class WebWalkRunner {
 
         theLogger.log(Level.INFO, "Current page: {0}",
                 currentPageURL);
+        
+        if (checkStatus() == WalkStatus.successfulStep) {
+            dumpScreen();
+        }
+         
         try {
             Page webPage = webBrowser.getCurrentPage();
             Hyperlink link = null;
@@ -238,6 +243,12 @@ public class WebWalkRunner {
                         }
                     }
                 } else {
+                    try {
+                        Thread.sleep(5);
+                        dumpScreen();
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(WebWalkRunner.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                     setStatus(WalkStatus.complete);
                 }
             }
@@ -262,18 +273,7 @@ public class WebWalkRunner {
             }
         }
 
-       if (checkStatus() == WalkStatus.successfulStep) {
-            if(shouldDumpScreen){
-                String dumpFilePath = dumpDirName + "/dump" + Integer.toString(dumpFileNumber) + ".png";
-                
-                try {
-                    webBrowser.dumpScreen(dumpFilePath);
-                    ++dumpFileNumber;
-                } catch (IOException ex) {
-                    theLogger.log(Level.WARNING, null, ex);
-                }
-            }
-        } else {
+        if (checkStatus() != WalkStatus.successfulStep) {
             if (failureCount > 3) {
                 setStatus(WalkStatus.failedStep);
             }
@@ -297,6 +297,7 @@ public class WebWalkRunner {
 
         theLogger.log(Level.INFO, "Current page: {0}",
                 currentPageURL);
+              
         try {
             int theCurrentPos = getCurrentTrailPos();
 
@@ -355,18 +356,7 @@ public class WebWalkRunner {
             }
         }
 
-       if (checkStatus() == WalkStatus.successfulStep) {
-            if(shouldDumpScreen){
-                String dumpFilePath = dumpDirName + "/dump" + Integer.toString(dumpFileNumber) + ".png";
-                
-                try {
-                    webBrowser.dumpScreen(dumpFilePath);
-                    ++dumpFileNumber;
-                } catch (IOException ex) {
-                    theLogger.log(Level.WARNING, null, ex);
-                }
-            }
-        } else {
+        if (checkStatus() != WalkStatus.successfulStep) {
             if (failureCount > 3) {
                 setStatus(WalkStatus.failedStep);
             }
@@ -611,7 +601,7 @@ public class WebWalkRunner {
 
         return retVal;
     }
-    
+
     /**
      * 
      * @param shouldDumpScreen
@@ -627,7 +617,7 @@ public class WebWalkRunner {
 
                 if (exists) {
                     ++dirNumber;
-                } 
+                }
             }
 
             boolean success = (new File(dumpDirName)).mkdir();
@@ -635,6 +625,19 @@ public class WebWalkRunner {
                 dumpFileNumber = 1;
                 this.shouldDumpScreen = shouldDumpScreen;
             }
+        }
+    }
+    
+    private void dumpScreen(){
+        if (shouldDumpScreen) {
+            String dumpFilePath = dumpDirName + "/dump" + Integer.toString(dumpFileNumber) + ".png";
+
+            try {
+                webBrowser.dumpScreen(dumpFilePath);
+                ++dumpFileNumber;
+            } catch (IOException ex) {
+                theLogger.log(Level.WARNING, null, ex);
+            } 
         }
     }
 

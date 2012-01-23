@@ -1,32 +1,226 @@
-23-Jan-2012 08:42:15 trailwebwalk.WebWalkRunner initTrail
+23-Jan-2012 13:14:36 trailwebwalk.WebWalkRunner initTrail
 WARNING: Failed making URL froma
-23-Jan-2012 08:42:15 trailwebwalk.WebWalkRunner initTrail
+23-Jan-2012 13:14:36 trailwebwalk.WebWalkRunner initTrail
 WARNING: Failed making URL froma
-23-Jan-2012 08:42:15 trailwebwalk.WebWalkRunner startUp
+23-Jan-2012 13:14:36 trailwebwalk.WebWalkRunner startUp
 INFO: Start up
-23-Jan-2012 08:42:37 trailwebwalk.WebWalkRunner setStatus
+23-Jan-2012 13:14:47 trailwebwalk.WebWalkRunner setStatus
 INFO: SetStatus: successfulStep
-23-Jan-2012 08:42:42 trailwebwalk.WebWalkController pauseTask
+23-Jan-2012 13:14:51 trailwebwalk.WebWalkController pauseTask
 INFO: Pausing
-23-Jan-2012 08:42:42 trailwebwalk.WebWalkRunner setStatus
+23-Jan-2012 13:14:51 trailwebwalk.WebWalkRunner setStatus
 INFO: SetStatus: successfulStep
-23-Jan-2012 08:42:42 trailwebwalk.WebWalkRunner stepTo
+23-Jan-2012 13:14:51 trailwebwalk.WebWalkRunner stepTo
 INFO: Step
-23-Jan-2012 08:42:42 trailwebwalk.WebWalkRunner stepTo
+23-Jan-2012 13:14:51 trailwebwalk.WebWalkRunner stepTo
 INFO: Current page: http://en.wikipedia.org/wiki/Samuel_Peploe
-23-Jan-2012 08:42:49 trailwebwalk.WebWalkRunner stepTo
+23-Jan-2012 13:15:00 trailwebwalk.WebWalkRunner stepTo
 INFO: New page: http://www.nationalgalleries.org/collection/artists-a-z/P/3623/artistName/Samuel%20John%20Peploe/recordId/3469
-23-Jan-2012 08:42:49 trailwebwalk.WebWalkRunner setStatus
+23-Jan-2012 13:15:00 trailwebwalk.WebWalkRunner setStatus
 INFO: SetStatus: successfulStep
-23-Jan-2012 08:42:49 trailwebwalk.WebWalkRunner stepTo
+23-Jan-2012 13:15:00 trailwebwalk.WebWalkRunner stepTo
 INFO: Status set
-23-Jan-2012 08:44:10 trailwebwalk.WebWalkController stopTask
-INFO: Stopping
-23-Jan-2012 08:44:10 trailwebwalk.WebWalkController pauseTask
-INFO: Pausing
-23-Jan-2012 08:44:10 trailwebwalk.WebWalkRunner setStatus
+23-Jan-2012 13:15:10 trailwebwalk.WebWalkRunner stepTo
+INFO: Step
+23-Jan-2012 13:15:10 trailwebwalk.WebWalkRunner stepTo
+INFO: Current page: http://www.nationalgalleries.org/collection/artists-a-z/P/3623/artistName/Samuel%20John%20Peploe/recordId/3469
+23-Jan-2012 13:15:16 trailwebwalk.WebWalkRunner stepTo
+INFO: New page: http://www.nationalgalleries.org/collection/artists-a-z/P/3623/artistName/Samuel%20John%20Peploe/recordId/782
+23-Jan-2012 13:15:16 trailwebwalk.WebWalkRunner setStatus
 INFO: SetStatus: successfulStep
-23-Jan-2012 08:44:10 trailwebwalk.WebWalkRunner stop
+23-Jan-2012 13:15:16 trailwebwalk.WebWalkRunner stepTo
+INFO: Status set
+23-Jan-2012 13:15:40 trailwebwalk.WebWalkRunner stepTo
+INFO: Step
+23-Jan-2012 13:15:40 trailwebwalk.WebWalkRunner stepTo
+INFO: Current page: http://www.nationalgalleries.org/collection/artists-a-z/P/3623/artistName/Samuel%20John%20Peploe/recordId/782
+23-Jan-2012 13:15:45 trailwebwalk.WebWalkRunner stepTo
+INFO: New page: http://www.nationalgalleries.org/collection/artists-a-z/P/3623/artistName/Samuel%20John%20Peploe/recordId/755
+23-Jan-2012 13:15:45 trailwebwalk.WebWalkRunner setStatus
+INFO: SetStatus: successfulStep
+23-Jan-2012 13:15:45 trailwebwalk.WebWalkRunner stepTo
+INFO: Status set
+23-Jan-2012 13:15:58 trailwebwalk.WebWalkRunner step
+INFO: Step
+23-Jan-2012 13:15:58 trailwebwalk.WebWalkRunner step
+INFO: Current page: http://www.nationalgalleries.org/collection/artists-a-z/P/3623/artistName/Samuel%20John%20Peploe/recordId/755
+23-Jan-2012 13:16:05 trailwebwalk.WebWalkRunner step
+INFO: New page: http://www.nationalgalleries.org/collection/artists-a-z/P/3623/artistName/Samuel%20John%20Peploe/recordId/774
+23-Jan-2012 13:16:05 trailwebwalk.WebWalkRunner setStatus
+INFO: SetStatus: successfulStep
+23-Jan-2012 13:16:05 trailwebwalk.WebWalkRunner step
+INFO: Status set
+23-Jan-2012 13:16:20 trailwebwalk.WebWalkRunner step
+INFO: Step
+23-Jan-2012 13:16:20 trailwebwalk.WebWalkRunner step
+INFO: Current page: http://www.nationalgalleries.org/collection/artists-a-z/P/3623/artistName/Samuel%20John%20Peploe/recordId/774
+23-Jan-2012 13:16:25 trailwebwalk.WebWalkRunner step
+INFO: New page: http://www.nationalgalleries.org/collection/artists-a-z/P/3623/artistName/Samuel%20John%20Peploe/recordId/769
+23-Jan-2012 13:16:25 trailwebwalk.WebWalkRunner setStatus
+INFO: SetStatus: successfulStep
+23-Jan-2012 13:16:25 trailwebwalk.WebWalkRunner step
+INFO: Status set
+23-Jan-2012 13:16:40 trailwebwalk.WebWalkRunner step
+INFO: Step
+23-Jan-2012 13:16:40 trailwebwalk.WebWalkRunner step
+INFO: Current page: http://www.nationalgalleries.org/collection/artists-a-z/P/3623/artistName/Samuel%20John%20Peploe/recordId/769
+23-Jan-2012 13:16:46 trailwebwalk.WebWalkRunner step
+INFO: New page: http://www.nationalgalleries.org/collection/artists-a-z/P/3623/artistName/Samuel%20John%20Peploe/recordId/765
+23-Jan-2012 13:16:46 trailwebwalk.WebWalkRunner setStatus
+INFO: SetStatus: successfulStep
+23-Jan-2012 13:16:46 trailwebwalk.WebWalkRunner step
+INFO: Status set
+23-Jan-2012 13:17:02 trailwebwalk.WebWalkRunner step
+INFO: Step
+23-Jan-2012 13:17:02 trailwebwalk.WebWalkRunner step
+INFO: Current page: http://www.nationalgalleries.org/collection/artists-a-z/P/3623/artistName/Samuel%20John%20Peploe/recordId/765
+23-Jan-2012 13:17:08 trailwebwalk.WebWalkRunner step
+INFO: New page: http://www.nationalgalleries.org/collection/artists-a-z/P/3623/artistName/Samuel%20John%20Peploe/recordId/759
+23-Jan-2012 13:17:08 trailwebwalk.WebWalkRunner setStatus
+INFO: SetStatus: successfulStep
+23-Jan-2012 13:17:08 trailwebwalk.WebWalkRunner step
+INFO: Status set
+23-Jan-2012 13:17:23 trailwebwalk.WebWalkRunner step
+INFO: Step
+23-Jan-2012 13:17:23 trailwebwalk.WebWalkRunner step
+INFO: Current page: http://www.nationalgalleries.org/collection/artists-a-z/P/3623/artistName/Samuel%20John%20Peploe/recordId/759
+23-Jan-2012 13:17:30 trailwebwalk.WebWalkRunner step
+INFO: New page: http://www.nationalgalleries.org/collection/artists-a-z/P/3623/artistName/Samuel%20John%20Peploe/recordId/754
+23-Jan-2012 13:17:30 trailwebwalk.WebWalkRunner setStatus
+INFO: SetStatus: successfulStep
+23-Jan-2012 13:17:30 trailwebwalk.WebWalkRunner step
+INFO: Status set
+23-Jan-2012 13:17:45 trailwebwalk.WebWalkRunner step
+INFO: Step
+23-Jan-2012 13:17:45 trailwebwalk.WebWalkRunner step
+INFO: Current page: http://www.nationalgalleries.org/collection/artists-a-z/P/3623/artistName/Samuel%20John%20Peploe/recordId/754
+23-Jan-2012 13:17:50 trailwebwalk.WebWalkRunner step
+INFO: New page: http://www.nationalgalleries.org/collection/artists-a-z/P/3623/artistName/Samuel%20John%20Peploe/recordId/8712
+23-Jan-2012 13:17:50 trailwebwalk.WebWalkRunner setStatus
+INFO: SetStatus: successfulStep
+23-Jan-2012 13:17:50 trailwebwalk.WebWalkRunner step
+INFO: Status set
+23-Jan-2012 13:18:05 trailwebwalk.WebWalkRunner step
+INFO: Step
+23-Jan-2012 13:18:05 trailwebwalk.WebWalkRunner step
+INFO: Current page: http://www.nationalgalleries.org/collection/artists-a-z/P/3623/artistName/Samuel%20John%20Peploe/recordId/8712
+23-Jan-2012 13:18:12 trailwebwalk.WebWalkRunner step
+INFO: New page: http://www.nationalgalleries.org/collection/artists-a-z/P/3623/artistName/Samuel%20John%20Peploe/recordId/763
+23-Jan-2012 13:18:12 trailwebwalk.WebWalkRunner setStatus
+INFO: SetStatus: successfulStep
+23-Jan-2012 13:18:12 trailwebwalk.WebWalkRunner step
+INFO: Status set
+23-Jan-2012 13:18:27 trailwebwalk.WebWalkRunner step
+INFO: Step
+23-Jan-2012 13:18:27 trailwebwalk.WebWalkRunner step
+INFO: Current page: http://www.nationalgalleries.org/collection/artists-a-z/P/3623/artistName/Samuel%20John%20Peploe/recordId/763
+23-Jan-2012 13:18:33 trailwebwalk.WebWalkRunner step
+INFO: New page: http://www.nationalgalleries.org/collection/artists-a-z/P/3623/artistName/Samuel%20John%20Peploe/recordId/776
+23-Jan-2012 13:18:33 trailwebwalk.WebWalkRunner setStatus
+INFO: SetStatus: successfulStep
+23-Jan-2012 13:18:33 trailwebwalk.WebWalkRunner step
+INFO: Status set
+23-Jan-2012 13:18:48 trailwebwalk.WebWalkRunner step
+INFO: Step
+23-Jan-2012 13:18:48 trailwebwalk.WebWalkRunner step
+INFO: Current page: http://www.nationalgalleries.org/collection/artists-a-z/P/3623/artistName/Samuel%20John%20Peploe/recordId/776
+23-Jan-2012 13:19:04 trailwebwalk.WebWalkRunner step
+INFO: New page: http://www.artknowledgenews.com/2009-09-14-23-22-07-a-celebration-and-sale-of-scottish-art-at-sothebys-london-this-autumn.html
+23-Jan-2012 13:19:04 trailwebwalk.WebWalkRunner setStatus
+INFO: SetStatus: successfulStep
+23-Jan-2012 13:19:04 trailwebwalk.WebWalkRunner step
+INFO: Status set
+23-Jan-2012 13:19:19 trailwebwalk.WebWalkRunner step
+INFO: Step
+23-Jan-2012 13:19:19 trailwebwalk.WebWalkRunner step
+INFO: Current page: http://www.artknowledgenews.com/2009-09-14-23-22-07-a-celebration-and-sale-of-scottish-art-at-sothebys-london-this-autumn.html
+23-Jan-2012 13:19:29 trailwebwalk.WebWalkRunner step
+INFO: New page: http://www.exploreart.co.uk/collection_themes_still_life.asp?ArtistID=62&loadType=2
+23-Jan-2012 13:19:29 trailwebwalk.WebWalkRunner setStatus
+INFO: SetStatus: successfulStep
+23-Jan-2012 13:19:29 trailwebwalk.WebWalkRunner step
+INFO: Status set
+23-Jan-2012 13:19:44 trailwebwalk.WebWalkRunner step
+INFO: Step
+23-Jan-2012 13:19:44 trailwebwalk.WebWalkRunner step
+INFO: Current page: http://www.exploreart.co.uk/collection_themes_still_life.asp?ArtistID=62&loadType=2
+23-Jan-2012 13:19:46 trailwebwalk.WebWalkRunner step
+INFO: New page: http://images.easyart.com/i/prints/lg/1/0/102874.jpg
+23-Jan-2012 13:19:46 trailwebwalk.WebWalkRunner setStatus
+INFO: SetStatus: successfulStep
+23-Jan-2012 13:19:46 trailwebwalk.WebWalkRunner step
+INFO: Status set
+23-Jan-2012 13:20:01 trailwebwalk.WebWalkRunner step
+INFO: Step
+23-Jan-2012 13:20:01 trailwebwalk.WebWalkRunner step
+INFO: Current page: http://images.easyart.com/i/prints/lg/1/0/102874.jpg
+23-Jan-2012 13:20:07 trailwebwalk.WebWalkRunner step
+INFO: New page: http://www.artchive.com/web_gallery/S/Samuel-John-Peploe/Street-Scene,-France,-c.1911.html
+23-Jan-2012 13:20:07 trailwebwalk.WebWalkRunner setStatus
+INFO: SetStatus: successfulStep
+23-Jan-2012 13:20:07 trailwebwalk.WebWalkRunner step
+INFO: Status set
+23-Jan-2012 13:20:22 trailwebwalk.WebWalkRunner step
+INFO: Step
+23-Jan-2012 13:20:23 trailwebwalk.WebWalkRunner step
+INFO: Current page: http://www.artchive.com/web_gallery/S/Samuel-John-Peploe/Street-Scene,-France,-c.1911.html
+23-Jan-2012 13:20:32 trailwebwalk.WebWalkRunner step
+INFO: New page: http://www.artfund.org/artwork/6069/still-life-teapot-and-fruit
+23-Jan-2012 13:20:32 trailwebwalk.WebWalkRunner setStatus
+INFO: SetStatus: successfulStep
+23-Jan-2012 13:20:32 trailwebwalk.WebWalkRunner step
+INFO: Status set
+23-Jan-2012 13:20:47 trailwebwalk.WebWalkRunner step
+INFO: Step
+23-Jan-2012 13:20:47 trailwebwalk.WebWalkRunner step
+INFO: Current page: http://www.artfund.org/artwork/6069/still-life-teapot-and-fruit
+23-Jan-2012 13:20:53 trailwebwalk.WebWalkRunner step
+INFO: New page: http://www.artfund.org/artwork/4279/still-life
+23-Jan-2012 13:20:53 trailwebwalk.WebWalkRunner setStatus
+INFO: SetStatus: successfulStep
+23-Jan-2012 13:20:53 trailwebwalk.WebWalkRunner step
+INFO: Status set
+23-Jan-2012 13:21:08 trailwebwalk.WebWalkRunner step
+INFO: Step
+23-Jan-2012 13:21:08 trailwebwalk.WebWalkRunner step
+INFO: Current page: http://www.artfund.org/artwork/4279/still-life
+23-Jan-2012 13:21:13 trailwebwalk.WebWalkRunner step
+INFO: New page: http://www.artfund.org/artwork/3950/interior-with-japanese-print
+23-Jan-2012 13:21:13 trailwebwalk.WebWalkRunner setStatus
+INFO: SetStatus: successfulStep
+23-Jan-2012 13:21:13 trailwebwalk.WebWalkRunner step
+INFO: Status set
+23-Jan-2012 13:21:28 trailwebwalk.WebWalkRunner step
+INFO: Step
+23-Jan-2012 13:21:28 trailwebwalk.WebWalkRunner step
+INFO: Current page: http://www.artfund.org/artwork/3950/interior-with-japanese-print
+23-Jan-2012 13:21:33 trailwebwalk.WebWalkRunner step
+INFO: New page: http://www.artfund.org/artwork/6034/flowers-and-fruit-japanese-background
+23-Jan-2012 13:21:33 trailwebwalk.WebWalkRunner setStatus
+INFO: SetStatus: successfulStep
+23-Jan-2012 13:21:33 trailwebwalk.WebWalkRunner step
+INFO: Status set
+23-Jan-2012 13:21:49 trailwebwalk.WebWalkRunner step
+INFO: Step
+23-Jan-2012 13:21:49 trailwebwalk.WebWalkRunner step
+INFO: Current page: http://www.artfund.org/artwork/6034/flowers-and-fruit-japanese-background
+23-Jan-2012 13:21:51 trailwebwalk.WebWalkRunner setStatus
+INFO: SetStatus: complete
+23-Jan-2012 13:21:51 trailwebwalk.WebWalkRunner step
+INFO: New page: http://www.artfund.org/artwork/6034/flowers-and-fruit-japanese-background
+23-Jan-2012 13:21:51 trailwebwalk.WebWalkRunner step
+INFO: Status set
+23-Jan-2012 13:21:51 trailwebwalk.WebWalkController pauseTask
+INFO: Pausing
+23-Jan-2012 13:21:51 trailwebwalk.WebWalkRunner setStatus
+INFO: SetStatus: successfulStep
+23-Jan-2012 13:22:46 trailwebwalk.WebWalkController stopTask
+INFO: Stopping
+23-Jan-2012 13:22:46 trailwebwalk.WebWalkController pauseTask
+INFO: Pausing
+23-Jan-2012 13:22:46 trailwebwalk.WebWalkRunner setStatus
+INFO: SetStatus: successfulStep
+23-Jan-2012 13:22:46 trailwebwalk.WebWalkRunner stop
 INFO: Stop
-23-Jan-2012 08:44:11 trailwebwalk.WebWalkRunner setStatus
+23-Jan-2012 13:22:47 trailwebwalk.WebWalkRunner setStatus
 INFO: SetStatus: successfulStep
